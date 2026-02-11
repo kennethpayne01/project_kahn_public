@@ -50,7 +50,11 @@ If you use this code or data, please cite:
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+This work is licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) (Creative Commons Attribution-NonCommercial 4.0 International).
+
+You are free to share and adapt this material for non-commercial purposes, provided you give appropriate credit. For commercial licensing inquiries, contact Kenneth Payne.
+
+See [LICENSE](LICENSE) for details.
 
 ## Contact
 
