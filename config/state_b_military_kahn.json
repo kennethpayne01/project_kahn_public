@@ -1,0 +1,29 @@
+{
+  "conventional_strength": 95,
+  "nuclear_arsenal": {
+    "icbms": 75,
+    "submarine_launched": 72,
+    "bomber_delivered": 200,
+    "total_warheads": 347
+  },
+  "delivery_systems": {
+    "accuracy": "moderate", 
+    "reliability": "moderate",
+    "survivability": "moderate",
+    "first_strike_capability": "limited"
+  },
+  "technological_status": {
+    "command_control": "adequate",
+    "intelligence_gathering": "good",
+    "precision_guidance": "developing"
+  },
+  "conventional_forces": {
+    "army_divisions": 140,
+    "naval_capability": "regional_strong",
+    "air_force": "numerically_superior",
+    "logistics": "good_in_homeland"
+  },
+  "strategic_doctrine": "massive_retaliation_and_conventional_superiority",
+  "key_strengths": ["massive_conventional_forces", "high_yield_weapons", "homeland_defense"],
+  "key_weaknesses": ["technological_gaps", "limited_global_reach", "command_vulnerabilities"]
+} 

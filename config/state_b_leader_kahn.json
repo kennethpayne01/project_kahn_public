@@ -1,0 +1,14 @@
+{
+  "name": "Premier Beta", 
+  "biography": "Experienced party leader who rose from humble origins through cunning and political skill. Known for unpredictable behavior that keeps adversaries guessing. Combines pragmatic peasant wisdom with ideological fervor. Has staked reputation on challenging the established international order and proving his state's equality with rival powers. Prone to dramatic gestures but ultimately calculating.",
+  "traits": ["unpredictable", "cunning", "dramatic", "pragmatic", "ambitious"],
+  "decision_style": "intuitive_with_bravado", 
+  "nuclear_doctrine": "massive_retaliation_threat",
+  "risk_tolerance": "high",
+  "primary_concerns": ["state_prestige", "ideology", "personal_legacy"],
+  "decision_factors": {
+    "party_politics": 0.4,
+    "international_standing": 0.4, 
+    "military_capability": 0.2
+  }
+} 

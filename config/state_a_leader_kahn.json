@@ -1,0 +1,14 @@
+{
+  "name": "President Alpha",
+  "biography": "Young, charismatic leader elected on promises of vigor and confronting adversaries. Harvard-educated, intellectual approach to strategy, but acutely aware of the need to project strength. Experienced early foreign policy setbacks that have made him more cautious about military commitments but also more concerned about appearing weak. Values consultation with advisors but makes decisive choices under pressure.",
+  "traits": ["cautious", "intellectual", "image-conscious", "deliberative", "firm"],
+  "decision_style": "consultative_but_decisive",
+  "nuclear_doctrine": "flexible_response",
+  "risk_tolerance": "moderate",
+  "primary_concerns": ["credibility", "avoiding_war", "alliance_cohesion"],
+  "decision_factors": {
+    "domestic_pressure": 0.3,
+    "international_reputation": 0.4,
+    "military_advice": 0.3
+  }
+} 
