@@ -4,6 +4,8 @@ This repository contains the simulation code and tournament data for "Strategic 
 
 ## Paper
 
+**AI Arms and Influence: Frontier Models Exhibit Sophisticated Reasoning in Simulated Nuclear Crises**
+
 The paper is available on arXiv: [link to be added]
 
 ## Repository Contents
@@ -40,8 +42,8 @@ Each CSV contains turn-by-turn data including:
 If you use this code or data, please cite:
 
 ```bibtex
-@article{payne2026strategic,
-  title={Strategic Interaction Between Frontier AI Models: A Computational Approach to Crisis Escalation},
+@article{payne2026arms,
+  title={AI Arms and Influence: Frontier Models Exhibit Sophisticated Reasoning in Simulated Nuclear Crises},
   author={Payne, Kenneth},
   journal={arXiv preprint},
   year={2026}
