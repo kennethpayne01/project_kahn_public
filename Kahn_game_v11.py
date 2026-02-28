@@ -23,19 +23,8 @@ import random
 import pandas as pd
 from dotenv import load_dotenv
 
-# Optional provider SDKs (import guarded)
-try:
-    import openai
-except Exception:
-    openai = None
-try:
-    import anthropic
-except Exception:
-    anthropic = None
-try:
-    import google.generativeai as genai
-except Exception:
-    genai = None
+# Unified LLM provider layer (supports GPT, Claude, Gemini, DeepSeek, Qwen, GLM, Moonshot)
+from llm_providers import get_llm_response, parse_json_response
 
 # -----------------------------
 # Pathing and environment setup
@@ -45,58 +34,12 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, '.env'))  # Local .env first
 load_dotenv(os.path.join(BASE_DIR, '..', '..', 'Schelling.env'))  # Fallback to project root
 
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY') or os.getenv('GEMINI_API_KEY')
-
-if openai and OPENAI_API_KEY:
-    import httpx
-    http_client = httpx.Client()
-    openai_client = openai.OpenAI(api_key=OPENAI_API_KEY, http_client=http_client)
-else:
-    openai_client = None
-if anthropic and ANTHROPIC_API_KEY:
-    anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-else:
-    anthropic_client = None
-if genai and GOOGLE_API_KEY:
-    genai.configure(api_key=GOOGLE_API_KEY)
-
-def parse_json_response(text: str) -> Dict[str, Any]:
-    """Robust JSON parsing with fallback - copied from v5"""
-    try:
-        result = json.loads(text)
-        # DEBUG: Log the keys for debugging Gemini parsing issues
-        logger.info(f"DEBUG: JSON keys found: {list(result.keys())}")
-        return result
-    except Exception:
-        # Try to extract JSON from markdown blocks first
-        import re
-        json_match = re.search(r'```json\s*(.*?)\s*```', text, re.DOTALL)
-        if json_match:
-            try:
-                result = json.loads(json_match.group(1))
-                logger.info(f"DEBUG: JSON keys found (from markdown): {list(result.keys())}")
-                return result
-            except Exception:
-                pass
-        
-        # Try to extract JSON blob
-        start = text.find('{')
-        end = text.rfind('}')
-        if start != -1 and end != -1 and end > start:
-            try:
-                result = json.loads(text[start:end+1])
-                logger.info(f"DEBUG: JSON keys found (from extraction): {list(result.keys())}")
-                return result
-            except Exception:
-                pass
-        logger.warning(f"DEBUG: No JSON found in text: {text[:200]}...")
-        return {}
-
 def load_json_safe(path_rel: str) -> Any:
     """Load JSON data from file with safe error handling"""
     path = path_rel if os.path.isabs(path_rel) else os.path.join(BASE_DIR, path_rel)
+    if not os.path.exists(path):
+        # Fallback: try config/ subdirectory
+        path = os.path.join(BASE_DIR, 'config', path_rel)
     if not os.path.exists(path):
         return None
     with open(path, 'r') as f:
@@ -306,49 +249,7 @@ def update_territory_and_military(curr_territory: float, a_action: float, b_acti
     
     return new_territory, new_a_military, new_b_military
 
-def get_llm_response(model: str, prompt: str, temperature: float = 0.7, max_tokens: int = 3000, retries: int = 3) -> str:
-    """Get response from LLM - compatible with api_clients interface"""
-    last_err = None
-    for _ in range(retries):
-        try:
-            m = model.lower()
-            if m.startswith('gpt') or m.startswith('o1') or m.startswith('o3'):
-                if not openai_client:
-                    raise RuntimeError("OpenAI client not configured")
-                # GPT-5.x, o1, o3 models use max_completion_tokens instead of max_tokens
-                is_new_model = 'gpt-5' in m or m.startswith('o1') or m.startswith('o3')
-                token_param = 'max_completion_tokens' if is_new_model else 'max_tokens'
-                
-                kwargs = {
-                    'model': (model or 'gpt-4o-2024-08-06'),
-                    'messages': [{"role": "user", "content": prompt}],
-                    token_param: max_tokens,
-                }
-                # New reasoning models don't support temperature
-                if not (m.startswith('o1') or m.startswith('o3')):
-                    kwargs['temperature'] = temperature
-                    
-                resp = openai_client.chat.completions.create(**kwargs)
-                return resp.choices[0].message.content
-            elif m.startswith('claude') and anthropic_client:
-                resp = anthropic_client.messages.create(
-                    model=model,
-                    max_tokens=max_tokens,
-                    temperature=temperature,
-                    messages=[{"role": "user", "content": prompt}],
-                )
-                return "".join(block.text for block in resp.content)
-            elif m.startswith('gemini') and genai:
-                gmodel = genai.GenerativeModel(model)
-                resp = gmodel.generate_content([
-                    {"text": prompt},
-                ], generation_config={"temperature": temperature, "max_output_tokens": max_tokens})
-                return resp.text
-            raise RuntimeError("No supported provider for model: " + model)
-        except Exception as e:
-            last_err = e
-            time.sleep(1)
-    raise RuntimeError(f"Model call failed after retries: {last_err}")
+# get_llm_response and parse_json_response imported from llm_providers
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -1914,7 +1815,7 @@ def run_kahn_game_v11(state_a_model: str, state_b_model: str,
     
     # Save to specified results directory, or default to 'Kahn results'
     if results_dir is None:
-    results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Kahn results')
+        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Kahn results')
     os.makedirs(results_dir, exist_ok=True)
     filepath = os.path.join(results_dir, filename)
     

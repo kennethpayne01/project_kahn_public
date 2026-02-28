@@ -1,0 +1,4 @@
+.env
+Kahn results/
+__pycache__/
+*.pyc
