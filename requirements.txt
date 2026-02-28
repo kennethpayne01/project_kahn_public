@@ -1,0 +1,6 @@
+openai>=1.0.0
+anthropic>=0.18.0
+google-generativeai>=0.3.0
+pandas
+python-dotenv
+httpx
