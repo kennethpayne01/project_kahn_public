@@ -98,7 +98,11 @@ def load_json_safe(path_rel: str) -> Any:
     """Load JSON data from file with safe error handling"""
     path = path_rel if os.path.isabs(path_rel) else os.path.join(BASE_DIR, path_rel)
     if not os.path.exists(path):
-        return None
+        config_path = os.path.join(BASE_DIR, "config", os.path.basename(path_rel))
+        if os.path.exists(config_path):
+            path = config_path
+        else:
+            return None
     with open(path, 'r') as f:
         return json.load(f)
 
