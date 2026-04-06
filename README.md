@@ -6,7 +6,7 @@ This repository contains the simulation code and tournament data for "Strategic 
 
 **AI Arms and Influence: Frontier Models Exhibit Sophisticated Reasoning in Simulated Nuclear Crises**
 
-The paper is available on arXiv: [link to be added]
+[The paper is available on arXiv](https://arxiv.org/pdf/2602.14740)
 
 ## Repository Contents
 
